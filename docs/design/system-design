@@ -1,0 +1,245 @@
+# Expense Tracker & Budget Manager - Comprehensive System Design Blueprint
+
+## 1. System Architecture & Core Modules
+The **Expense Tracker & Budget Manager** is designed using the MERN stack architecture (MongoDB, Express.js, React.js, Node.js) and is organized into 6 main functional modules[cite: 2]:
+
+1. **User Management & Authentication**: Handles user registration, login, JWT token generation, password hashing, and user profile management[cite: 2].
+2. **Category Management**: Enables creation, updating, and deletion of income and expense categories (both system defaults and custom user categories)[cite: 2].
+3. **Expense Management**: Provides full CRUD (Create, Read, Update, Delete) operations for logging daily user expenses[cite: 2].
+4. **Income Management**: Provides full CRUD operations for recording income transactions[cite: 2].
+5. **Budget Management**: Allows users to set monthly category spending limits and monitor real-time usage and thresholds[cite: 2].
+6. **Dashboard & Analytical Reports**: Aggregates financial data into interactive pie/bar charts, summary indicators, and monthly financial performance reports[cite: 2].
+
+---
+
+## 2. MongoDB Database Collection Schemas
+
+### Collection 1: `Users`
+- `_id`: ObjectId (Primary Key)
+- `name`: String (Required)
+- `email`: String (Required, Unique)
+- `password`: String (Hashed via bcrypt, Required)[cite: 2]
+- `role`: String (Enum: ['Admin', 'User'], Default: 'User')[cite: 2]
+- `createdAt`: Date
+
+### Collection 2: `Categories`
+- `_id`: ObjectId (Primary Key)
+- `name`: String (Required)
+- `type`: String (Enum: ['income', 'expense'], Required)
+- `user`: ObjectId (Ref: 'Users', null for default system categories)[cite: 2]
+- `createdAt`: Date
+
+### Collection 3: `Expenses`
+- `_id`: ObjectId (Primary Key)
+- `title`: String (Required)
+- `amount`: Number (Required)
+- `category`: ObjectId (Ref: 'Categories', Required)[cite: 2]
+- `user`: ObjectId (Ref: 'Users', Required)[cite: 2]
+- `date`: Date (Default: Date.now)
+- `notes`: String
+
+### Collection 4: `Incomes`
+- `_id`: ObjectId (Primary Key)
+- `title`: String (Required)
+- `amount`: Number (Required)
+- `category`: ObjectId (Ref: 'Categories', Required)[cite: 2]
+- `user`: ObjectId (Ref: 'Users', Required)[cite: 2]
+- `date`: Date (Default: Date.now)
+- `notes`: String
+
+### Collection 5: `Budgets`
+- `_id`: ObjectId (Primary Key)
+- `user`: ObjectId (Ref: 'Users', Required)[cite: 2]
+- `category`: ObjectId (Ref: 'Categories', Required)[cite: 2]
+- `limitAmount`: Number (Required)
+- `month`: Number (1-12, Required)
+- `year`: Number (Required)
+- `createdAt`: Date
+
+---
+
+## 3. Entity Relationship Diagram (ERD)
+
+### Multiplicity & Key Relationships
+- **User to Income**: 1-to-Many (`1 User` creates `N Income` records)[cite: 2].
+- **User to Expense**: 1-to-Many (`1 User` creates `N Expense` records)[cite: 2].
+- **User to Category**: 1-to-Many (`1 User` creates `N Custom Categories`)[cite: 2].
+- **User to Budget**: 1-to-Many (`1 User` configures `N Monthly Budgets`)[cite: 2].
+- **Category to Expense**: 1-to-Many (`1 Category` classifies `N Expenses`)[cite: 2].
+- **Category to Income**: 1-to-Many (`1 Category` classifies `N Incomes`)[cite: 2].
+- **Category to Budget**: 1-to-1 or 1-to-Many (`1 Category` targets `Budget Limits` per month)[cite: 2].
+
+### Visual Entity Relationship Diagram
+
+```mermaid
+erDiagram
+    USERS ||--o{ INCOMES : creates
+    USERS ||--o{ EXPENSES : creates
+    USERS ||--o{ CATEGORIES : defines
+    USERS ||--o{ BUDGETS : configures
+    CATEGORIES ||--o{ EXPENSES : classifies
+    CATEGORIES ||--o{ INCOMES : classifies
+    CATEGORIES ||--o{ BUDGETS : targets
+
+    USERS {
+        ObjectId _id PK
+        string name
+        string email
+        string password
+        string role
+        date createdAt
+    }
+
+    CATEGORIES {
+        ObjectId _id PK
+        string name
+        string type
+        ObjectId user FK
+        date createdAt
+    }
+
+    EXPENSES {
+        ObjectId _id PK
+        string title
+        number amount
+        ObjectId category FK
+        ObjectId user FK
+        date date
+        string notes
+    }
+
+    INCOMES {
+        ObjectId _id PK
+        string title
+        number amount
+        ObjectId category FK
+        ObjectId user FK
+        date date
+        string notes
+    }
+
+    BUDGETS {
+        ObjectId _id PK
+        ObjectId user FK
+        ObjectId category FK
+        number limitAmount
+        number month
+        number year
+        date createdAt
+    }
+
+    ##. Application Navigation Flows
+Registered User Navigation
+Login / Register Page[cite: 2]
+  └── Registered User Dashboard[cite: 2]
+      ├── Income Tracker (List / Add / Edit)[cite: 2]
+      ├── Expense Tracker (List / Add / Edit)[cite: 2]
+      ├── Category Manager (Custom & Default)[cite: 2]
+      ├── Budget Planning (Limits & Progress)[cite: 2]
+      ├── Financial Reports & Analytics[cite: 2]
+      └── User Profile Settings / Logout[cite: 2]
+
+    ##Administrator Navigation
+    Login Page[cite: 2]
+  └── Admin Dashboard[cite: 2]
+      ├── User Management (List Users / Roles)[cite: 2]
+      ├── System Default Categories Management[cite: 2]
+      ├── System Analytics & User Activity Reports[cite: 2]
+      └── System Settings / Logout[cite: 2]
+
+    ##. System Application Workflow  
+    [User Action: Add Transaction / Budget]
+                │
+                ▼
+  [Validate Input Data via React Form UI]
+                │
+                ▼
+  [Send REST API Request + JWT Authorization Header][cite: 2]
+                │
+                ▼
+  [Express Backend Controller Route & Middleware Check]
+                │
+                ▼
+  [Update MongoDB Database Collection][cite: 2]
+                │
+                ▼
+  [Execute Aggregation Pipelines (Income vs. Expense vs. Budget)][cite: 2]
+                │
+                ▼
+  [Dashboard Charts & Metric Summaries Auto-Updated][cite: 2]
+
+  ##Primary Page Wireframes
+  ##Screen 1: Login & Registration Page
+  +-------------------------------------------------------------+
+|               Expense Tracker & Budget Manager              |
++-------------------------------------------------------------+
+|                                                             |
+|                       [ LOGIN / REGISTER ]                  |
+|                                                             |
+|   Email Address:  [ user@example.com                   ]    |
+|   Password:       [ ********************               ]    |
+|                                                             |
+|   [ Login Button ]      or    [ Switch to Register ]        |
+|                                                             |
++-------------------------------------------------------------+
+
+##Screen 2: Main Dashboard Page
++-------------------------------------------------------------+
+| [Logo] ExpenseTracker   Dashboard  Incomes  Expenses  Logout|
++-------------------------------------------------------------+
+| FINANCIAL OVERVIEW                                          |
+| +------------------+ +------------------+ +---------------+ |
+| | Total Balance    | | Total Income     | | Total Expense | |
+| | $3,450.00        | | $5,000.00        | | $1,550.00     | |
+| +------------------+ +------------------+ +---------------+ |
+|                                                             |
+| CATEGORY SPENDING (Pie Chart)     RECENT TRANSACTIONS       |
+| [  Chart Visual Here  ]           - Groceries:  -$120.00    |
+|                                   - Salary:    +$2,500.00   |
+|                                   - Electric:   -$85.00     |
++-------------------------------------------------------------+
+
+##Screen 3: Transaction Management Page (Income/Expense CRUD)
++-------------------------------------------------------------+
+| Transactions List                     [ + Add Transaction ] |
++-------------------------------------------------------------+
+| Search: [               ]   Filter Category: [ All Categories v ]
+|                                                             |
+| Date       | Title         | Category    | Type    | Amount |
+|------------|---------------+-------------|---------|--------|
+| 2026-08-10 | Salary        | Job         | Income  | $2,500 |
+| 2026-08-11 | Supermarket   | Groceries   | Expense | $120   |
+| 2026-08-12 | Internet Bill | Utilities   | Expense | $60    |
+|                                                             |
+| Actions: [ Edit ] [ Delete ]                                |
++-------------------------------------------------------------+
+
+##Screen 4: Monthly Budget Management Page
++-------------------------------------------------------------+
+| Monthly Budget Limits (August 2026)      [ + Set Budget ]   |
++-------------------------------------------------------------+
+|                                                             |
+| Groceries                                                   |
+| Spent: $350 / Limit: $500                                   |
+| [====================--------] 70% used                     |
+|                                                             |
+| Entertainment                                               |
+| Spent: $180 / Limit: $150 (OVER BUDGET!)                    |
+| [============================!] 120% used                    |
+|                                                             |
++-------------------------------------------------------------+
+
+##Screen 5: Analytics & Reports Page
++-------------------------------------------------------------+
+| Financial Analytics Reports                                 |
++-------------------------------------------------------------+
+| Select Month: [ August 2026 v ]    Export: [ PDF ] [ Excel ]|
+|                                                             |
+| MONTHLY INCOME VS EXPENSES (Bar Chart Visual)               |
+| |                                                           |
+| |  [Income]  [Expense]   [Income]  [Expense]                |
+| |____|__|______|__|________|__|______|__|_________________  |
+|      July 2026               August 2026                    |
+|                                                             |
+| Total Savings this Month: $1,450.00                         |
++-------------------------------------------------------------+
