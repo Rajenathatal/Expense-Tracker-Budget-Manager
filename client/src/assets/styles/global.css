@@ -1,0 +1,19 @@
+@import './variables.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+h1, h2, h3 {
+  color: var(--secondary-color);
+  margin-bottom: 0.5rem;
+}

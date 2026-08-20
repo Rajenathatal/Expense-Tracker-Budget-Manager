@@ -1,0 +1,9 @@
+:root {
+  --primary-color: #2563eb;
+  --secondary-color: #1e293b;
+  --background-color: #f8fafc;
+  --text-color: #0f172a;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
