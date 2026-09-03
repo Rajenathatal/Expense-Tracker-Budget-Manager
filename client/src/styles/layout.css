@@ -1,0 +1,37 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-body {
+  display: flex;
+  flex: 1;
+}
+
+.content-area {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.navbar {
+  background: var(--secondary-color);
+  color: #ffffff;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.footer {
+  background: var(--secondary-color);
+  color: #94a3b8;
+  padding: 1.25rem;
+  text-align: center;
+  margin-top: auto;
+}
