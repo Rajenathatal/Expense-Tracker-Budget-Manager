@@ -1,9 +1,12 @@
 :root {
-  --primary-color: #2563eb;
-  --secondary-color: #1e293b;
-  --background-color: #f8fafc;
-  --text-color: #0f172a;
-  --border-color: #e2e8f0;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary: #1e293b;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-dark: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
 }
 
 * {
@@ -13,8 +16,9 @@
 }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-dark);
   line-height: 1.5;
+  overflow-x: hidden;
 }

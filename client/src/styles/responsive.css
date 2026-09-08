@@ -6,6 +6,13 @@
   .content-area {
     padding: 1rem;
   }
+  .main-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
 }
 
 /* Mobile Styles */
@@ -15,12 +22,19 @@
     align-items: flex-start;
     gap: 0.75rem;
   }
+
   .nav-links {
     flex-direction: column;
     width: 100%;
     gap: 0.5rem;
   }
+
   .grid-layout {
     grid-template-columns: 1fr;
+  }
+
+  .btn {
+    width: 100%;
+    text-align: center;
   }
 }

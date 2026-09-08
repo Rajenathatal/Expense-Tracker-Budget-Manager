@@ -4,18 +4,16 @@
   min-height: 100vh;
 }
 
-.main-body {
-  display: flex;
+.main-content {
   flex: 1;
-}
-
-.content-area {
-  flex: 1;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .navbar {
-  background: var(--secondary-color);
+  background-color: var(--secondary);
   color: #ffffff;
   padding: 1rem 1.5rem;
   display: flex;
@@ -23,15 +21,34 @@
   align-items: center;
 }
 
+.navbar .logo {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
 .nav-links {
   display: flex;
   gap: 1rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.nav-links a.active {
+  color: #60a5fa;
+  font-weight: 600;
 }
 
 .footer {
-  background: var(--secondary-color);
+  background-color: var(--secondary);
   color: #94a3b8;
   padding: 1.25rem;
   text-align: center;
   margin-top: auto;
+  font-size: 0.875rem;
 }
